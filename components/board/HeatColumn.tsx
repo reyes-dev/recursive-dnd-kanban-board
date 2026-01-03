@@ -88,10 +88,9 @@ export function HeatColumn({ heatData }: HeatColumnProps) {
 export function HeatsContainer({ children }: { children: React.ReactNode }) {
   return (
     <ScrollArea className="w-full">
-      <div className="flex gap-4 items-start p-4 min-h-[calc(100vh-200px)]">
+      <div className="flex gap-4 items-start p-4 min-h-[calc(100vh-200px)] justify-center">
         {children}
       </div>
     </ScrollArea>
   );
 }
-

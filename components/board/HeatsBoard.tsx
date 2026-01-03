@@ -145,8 +145,9 @@ function computeHeatsFromDrivers(
 
 export function HeatsBoard() {
   const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
-  const [activeCategory, setActiveCategory] =
-    useState<CategoryDragData | null>(null);
+  const [activeCategory, setActiveCategory] = useState<CategoryDragData | null>(
+    null
+  );
   const [activeClass, setActiveClass] = useState<ClassDragData | null>(null);
   const [activeDriver, setActiveDriver] = useState<Driver | null>(null);
 
@@ -409,4 +410,3 @@ export function HeatsBoard() {
     </DndContext>
   );
 }
-

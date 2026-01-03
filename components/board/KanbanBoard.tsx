@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import {
@@ -133,6 +133,15 @@ const initialCars: Car[] = [
   },
 ];
 
+// Helper function to flatten nested columns (defined outside component to avoid recreation)
+const flattenColumns = (cols: NestedColumn[]): Column[] => {
+  return cols.flatMap((col) =>
+    col.children
+      ? [{ id: col.id, title: col.title }, ...flattenColumns(col.children)]
+      : [col]
+  );
+};
+
 export function KanbanBoard() {
   const [columns, setColumns] = useState<NestedColumn[]>(defaultCols);
   const [cars, setCars] = useState<Car[]>(initialCars);
@@ -166,19 +175,7 @@ export function KanbanBoard() {
     return false;
   };
 
-  // Helper function to flatten nested columns
-  const flattenColumns = useCallback((cols: NestedColumn[]): Column[] => {
-    return cols.flatMap((col) =>
-      col.children
-        ? [{ id: col.id, title: col.title }, ...flattenColumns(col.children)]
-        : [col]
-    );
-  }, []);
-
-  const flatColumns = useMemo(
-    () => flattenColumns(columns),
-    [columns, flattenColumns]
-  );
+  const flatColumns = useMemo(() => flattenColumns(columns), [columns]);
   const columnsId = useMemo(
     () => flatColumns.map((col) => col.id),
     [flatColumns]

@@ -44,10 +44,11 @@ export function ClassCard({
     },
   });
 
+  // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
     transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      ? `translate3d(0, ${transform.y}px, 0)`
       : undefined,
   };
 
@@ -97,7 +98,7 @@ export function ClassCard({
       </CardHeader>
       <CardContent className="p-2 pt-0">
         <SortableContext items={driverIds}>
-          <div className="flex flex-col gap-1.5 ml-4">
+          <div className="flex flex-col gap-1.5 ml-2">
             {classData.drivers.map((driver) => (
               <DriverCard key={driver.id} driver={driver} />
             ))}

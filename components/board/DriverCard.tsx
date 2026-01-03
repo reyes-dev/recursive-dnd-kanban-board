@@ -31,11 +31,10 @@ export function DriverCard({ driver, isOverlay }: DriverCardProps) {
     },
   });
 
+  // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
+    transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
   };
 
   const variants = cva("", {

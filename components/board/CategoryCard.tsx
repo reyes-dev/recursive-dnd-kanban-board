@@ -41,10 +41,11 @@ export function CategoryCard({
     },
   });
 
+  // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
     transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      ? `translate3d(0, ${transform.y}px, 0)`
       : undefined,
   };
 
@@ -95,7 +96,7 @@ export function CategoryCard({
       </CardHeader>
       <CardContent className="p-2">
         <SortableContext items={classIds}>
-          <div className="flex flex-col gap-2 ml-2">
+          <div className="flex flex-col gap-2">
             {categoryData.classes.map((classData) => (
               <ClassCard
                 key={classData.classId}

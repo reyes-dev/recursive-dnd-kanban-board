@@ -32,7 +32,7 @@ export function HeatColumn({ heatData }: HeatColumnProps) {
   );
 
   const variants = cva(
-    "h-full w-[350px] bg-primary-foreground flex flex-col shrink-0 snap-center overflow-hidden",
+    "h-full w-[400px] bg-primary-foreground flex flex-col shrink-0 snap-center overflow-hidden",
     {
       variants: {
         dropping: {

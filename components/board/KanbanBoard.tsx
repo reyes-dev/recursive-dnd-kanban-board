@@ -17,7 +17,12 @@ import {
   DataRef,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { Column, BoardColumn, BoardContainer, ColumnDragData } from "./BoardColumn";
+import {
+  Column,
+  BoardColumn,
+  BoardContainer,
+  ColumnDragData,
+} from "./BoardColumn";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 import { Car, CarCard, CarDragData } from "./CarCard";
 
@@ -28,11 +33,11 @@ type NestedColumn = Column & {
 const defaultCols: NestedColumn[] = [
   {
     id: "list-of-cars",
-    title: "List of Cars"
+    title: "List of Cars",
   },
   {
     id: "american-cars",
-    title: "American Cars"
+    title: "American Cars",
   },
   {
     id: "european-cars",
@@ -40,17 +45,17 @@ const defaultCols: NestedColumn[] = [
     children: [
       { id: "german-cars", title: "German Cars" },
       { id: "italian-cars", title: "Italian Cars" },
-      { id: "swedish-cars", title: "Swedish Cars" }
-    ]
+      { id: "swedish-cars", title: "Swedish Cars" },
+    ],
   },
   {
     id: "asian-cars",
     title: "Asian Cars",
     children: [
       { id: "japanese-cars", title: "Japanese Cars" },
-      { id: "korean-cars", title: "Korean Cars" }
-    ]
-  }
+      { id: "korean-cars", title: "Korean Cars" },
+    ],
+  },
 ];
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
@@ -125,7 +130,7 @@ const initialCars: Car[] = [
     id: "volvo",
     columnId: "swedish-cars",
     content: "Volvo",
-  }
+  },
 ];
 
 export function KanbanBoard() {
@@ -164,12 +169,20 @@ export function KanbanBoard() {
   // Helper function to flatten nested columns
   const flattenColumns = useCallback((cols: NestedColumn[]): Column[] => {
     return cols.flatMap((col) =>
-      col.children ? [{ id: col.id, title: col.title }, ...flattenColumns(col.children)] : [col]
+      col.children
+        ? [{ id: col.id, title: col.title }, ...flattenColumns(col.children)]
+        : [col]
     );
   }, []);
 
-  const flatColumns = useMemo(() => flattenColumns(columns), [columns, flattenColumns]);
-  const columnsId = useMemo(() => flatColumns.map((col) => col.id), [flatColumns]);
+  const flatColumns = useMemo(
+    () => flattenColumns(columns),
+    [columns, flattenColumns]
+  );
+  const columnsId = useMemo(
+    () => flatColumns.map((col) => col.id),
+    [flatColumns]
+  );
 
   // recursively render nested columns
   const renderNestedColumns = (cols: NestedColumn[]) => {
@@ -179,7 +192,9 @@ export function KanbanBoard() {
       if (col.children && col.children.length > 0) {
         return (
           <div key={col.id} className="flex flex-col">
-            {carsInColumn.length > 0 && <BoardColumn column={col} cars={carsInColumn} />}
+            {carsInColumn.length > 0 && (
+              <BoardColumn column={col} cars={carsInColumn} />
+            )}
             <div className={carsInColumn.length > 0 ? "ml-4 mt-2" : ""}>
               {renderNestedColumns(col.children)}
             </div>
@@ -224,23 +239,27 @@ export function KanbanBoard() {
     const isActiveAColumn = activeData?.type === "Column";
     if (isActiveAColumn) {
       setColumns((columns) => {
-        const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+        const activeColumnIndex = columns.findIndex(
+          (col) => col.id === activeId
+        );
         const overColumnIndex = columns.findIndex((col) => col.id === overId);
         return arrayMove(columns, activeColumnIndex, overColumnIndex);
       });
     } else if (activeData?.type === "Car") {
       const newColumnId = hasDraggableData(over)
         ? over.data.current?.type === "Column"
-          ? over.id as ColumnId
+          ? (over.id as ColumnId)
           : over.data.current?.car.columnId
-        : over.id as ColumnId;
+        : (over.id as ColumnId);
 
       const oldColumnId = activeData.car.columnId;
 
       if (oldColumnId !== newColumnId) {
         setCars((cars) => {
           return cars.map((car) =>
-            car.id === activeId && newColumnId ? { ...car, columnId: newColumnId } : car
+            car.id === activeId && newColumnId
+              ? { ...car, columnId: newColumnId }
+              : car
           );
         });
       } else {
@@ -308,7 +327,8 @@ export function KanbanBoard() {
       sensors={sensors}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      onDragOver={onDragOver}>
+      onDragOver={onDragOver}
+    >
       <BoardContainer>
         <SortableContext items={columnsId}>
           {renderNestedColumns(columns)}

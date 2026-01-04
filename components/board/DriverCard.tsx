@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,8 +33,6 @@ export const DriverCard = memo(function DriverCard({
   isOverlay,
   onAssignmentChange,
 }: DriverCardProps) {
-  const [showSelect, setShowSelect] = useState(false);
-
   const {
     setNodeRef,
     attributes,
@@ -65,15 +63,10 @@ export const DriverCard = memo(function DriverCard({
     [driver.id, onAssignmentChange]
   );
 
-  const handleMouseEnter = useCallback(() => setShowSelect(true), []);
-  const handleMouseLeave = useCallback(() => setShowSelect(false), []);
-
   return (
     <Card
       ref={setNodeRef}
       style={style}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       className={`${variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })} hover:shadow-md bg-card`}
@@ -103,21 +96,10 @@ export const DriverCard = memo(function DriverCard({
         </div>
         {!isOverlay && onAssignmentChange && (
           <div className="ml-6">
-            {showSelect ? (
-              <SelectAssignment
-                value={driver.workAssignment}
-                onValueChange={handleAssignmentChange}
-              />
-            ) : (
-              <div className="h-7 text-xs px-3 py-1.5 rounded-md bg-muted/50 border border-muted-foreground/20 text-muted-foreground truncate">
-                {driver.workAssignment === "none"
-                  ? "No Assignment"
-                  : driver.workAssignment
-                      .split("-")
-                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                      .join(" ")}
-              </div>
-            )}
+            <SelectAssignment
+              value={driver.workAssignment}
+              onValueChange={handleAssignmentChange}
+            />
           </div>
         )}
       </CardContent>

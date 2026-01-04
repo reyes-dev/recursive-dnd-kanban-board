@@ -157,12 +157,12 @@ export function HeatsBoard() {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 3, // Reduced for faster response
+        distance: 3,
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 100, // Reduced from 250ms
+        delay: 100,
         tolerance: 5,
       },
     }),

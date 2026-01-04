@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useCallback, useRef, useEffect } from "react";
 import { WORK_ASSIGNMENTS, type WorkAssignmentId } from "@/data/types";
+import { cn } from "@/lib/utils";
 
 type SelectAssignmentProps = {
   value: WorkAssignmentId;
@@ -18,34 +13,63 @@ export function SelectAssignment({
   value,
   onValueChange,
 }: SelectAssignmentProps) {
-  const currentAssignment = WORK_ASSIGNMENTS.find((a) => a.id === value);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Use capture phase to intercept pointer events before dnd-kit
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const stopEvent = (e: Event) => {
+      e.stopPropagation();
+    };
+
+    // Add listeners in capture phase to intercept before dnd-kit
+    wrapper.addEventListener("pointerdown", stopEvent, true);
+    wrapper.addEventListener("pointermove", stopEvent, true);
+    wrapper.addEventListener("pointerup", stopEvent, true);
+    wrapper.addEventListener("mousedown", stopEvent, true);
+    wrapper.addEventListener("touchstart", stopEvent, true);
+
+    return () => {
+      wrapper.removeEventListener("pointerdown", stopEvent, true);
+      wrapper.removeEventListener("pointermove", stopEvent, true);
+      wrapper.removeEventListener("pointerup", stopEvent, true);
+      wrapper.removeEventListener("mousedown", stopEvent, true);
+      wrapper.removeEventListener("touchstart", stopEvent, true);
+    };
+  }, []);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      onValueChange(e.target.value as WorkAssignmentId);
+    },
+    [onValueChange]
+  );
 
   return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger
-        className="h-7 text-xs w-full bg-muted/50 border-muted-foreground/20 focus:ring-1 focus:ring-primary/50"
-        onClick={(e) => e.stopPropagation()}
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        <SelectValue placeholder="Assign role">
-          {currentAssignment?.label || "No Assignment"}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={(e) => e.stopPropagation()}
+    <div ref={wrapperRef} data-no-dnd="true">
+      <select
+        value={value}
+        onChange={handleChange}
+        className={cn(
+          "h-7 w-full text-xs px-2 py-1",
+          "rounded-md border border-muted-foreground/20",
+          "bg-background text-foreground",
+          "focus:outline-none focus:ring-1 focus:ring-primary/50",
+          "cursor-pointer"
+        )}
       >
         {WORK_ASSIGNMENTS.map((assignment) => (
-          <SelectItem
+          <option
             key={assignment.id}
             value={assignment.id}
-            className="text-xs"
+            className="bg-background text-foreground"
           >
             {assignment.label}
-          </SelectItem>
+          </option>
         ))}
-      </SelectContent>
-    </Select>
+      </select>
+    </div>
   );
 }
-

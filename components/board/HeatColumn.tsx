@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -19,7 +19,22 @@ type HeatColumnProps = {
   ) => void;
 };
 
-export function HeatColumn({ heatData, onAssignmentChange }: HeatColumnProps) {
+const variants = cva(
+  "h-full w-[400px] bg-primary-foreground flex flex-col shrink-0 snap-center overflow-hidden",
+  {
+    variants: {
+      dropping: {
+        default: "border-2 border-transparent",
+        over: "ring-2 ring-primary border-primary/50 bg-primary/5",
+      },
+    },
+  }
+);
+
+export const HeatColumn = memo(function HeatColumn({
+  heatData,
+  onAssignmentChange,
+}: HeatColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `heat-${heatData.heatNum}`,
     data: {
@@ -34,18 +49,6 @@ export function HeatColumn({ heatData, onAssignmentChange }: HeatColumnProps) {
         (c) => `category-${c.categoryId}-heat-${heatData.heatNum}`
       ),
     [heatData.categories, heatData.heatNum]
-  );
-
-  const variants = cva(
-    "h-full w-[400px] bg-primary-foreground flex flex-col shrink-0 snap-center overflow-hidden",
-    {
-      variants: {
-        dropping: {
-          default: "border-2 border-transparent",
-          over: "ring-2 ring-primary border-primary/50 bg-primary/5",
-        },
-      },
-    }
   );
 
   return (
@@ -88,7 +91,7 @@ export function HeatColumn({ heatData, onAssignmentChange }: HeatColumnProps) {
       </ScrollArea>
     </Card>
   );
-}
+});
 
 // Container for all heats
 export function HeatsContainer({ children }: { children: React.ReactNode }) {

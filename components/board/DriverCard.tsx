@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useState, useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,11 +19,22 @@ type DriverCardProps = {
   ) => void;
 };
 
-export function DriverCard({
+const variants = cva("", {
+  variants: {
+    dragging: {
+      over: "ring-2 ring-primary opacity-50 scale-105",
+      overlay: "ring-2 ring-primary shadow-lg scale-105",
+    },
+  },
+});
+
+export const DriverCard = memo(function DriverCard({
   driver,
   isOverlay,
   onAssignmentChange,
 }: DriverCardProps) {
+  const [showSelect, setShowSelect] = useState(false);
+
   const {
     setNodeRef,
     attributes,
@@ -41,32 +53,30 @@ export function DriverCard({
     },
   });
 
-  // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
     transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
   };
 
-  const variants = cva("", {
-    variants: {
-      dragging: {
-        over: "ring-2 ring-primary opacity-50 scale-105 transition-all duration-200",
-        overlay: "ring-2 ring-primary shadow-lg scale-105",
-      },
+  const handleAssignmentChange = useCallback(
+    (value: WorkAssignmentId) => {
+      onAssignmentChange?.(driver.id, value);
     },
-  });
+    [driver.id, onAssignmentChange]
+  );
 
-  const handleAssignmentChange = (value: WorkAssignmentId) => {
-    onAssignmentChange?.(driver.id, value);
-  };
+  const handleMouseEnter = useCallback(() => setShowSelect(true), []);
+  const handleMouseLeave = useCallback(() => setShowSelect(false), []);
 
   return (
     <Card
       ref={setNodeRef}
       style={style}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={`${variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-      })} transition-all duration-200 hover:shadow-md bg-card`}
+      })} hover:shadow-md bg-card`}
     >
       <CardContent className="p-3 flex flex-col gap-2">
         <div className="flex items-center gap-3">
@@ -74,7 +84,7 @@ export function DriverCard({
             variant="ghost"
             {...attributes}
             {...listeners}
-            className="p-1 text-muted-foreground -ml-1 h-auto cursor-grab hover:text-foreground transition-colors shrink-0"
+            className="p-1 text-muted-foreground -ml-1 h-auto cursor-grab hover:text-foreground shrink-0"
           >
             <span className="sr-only">Move driver</span>
             <GripVertical className="h-4 w-4" />
@@ -84,9 +94,7 @@ export function DriverCard({
               #{driver.carNumber}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-sm truncate">
-                {driver.driverName}
-              </p>
+              <p className="font-medium text-sm truncate">{driver.driverName}</p>
               <p className="text-xs text-muted-foreground truncate">
                 {driver.carName}
               </p>
@@ -95,13 +103,24 @@ export function DriverCard({
         </div>
         {!isOverlay && onAssignmentChange && (
           <div className="ml-6">
-            <SelectAssignment
-              value={driver.workAssignment}
-              onValueChange={handleAssignmentChange}
-            />
+            {showSelect ? (
+              <SelectAssignment
+                value={driver.workAssignment}
+                onValueChange={handleAssignmentChange}
+              />
+            ) : (
+              <div className="h-7 text-xs px-3 py-1.5 rounded-md bg-muted/50 border border-muted-foreground/20 text-muted-foreground truncate">
+                {driver.workAssignment === "none"
+                  ? "No Assignment"
+                  : driver.workAssignment
+                      .split("-")
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .join(" ")}
+              </div>
+            )}
           </div>
         )}
       </CardContent>
     </Card>
   );
-}
+});

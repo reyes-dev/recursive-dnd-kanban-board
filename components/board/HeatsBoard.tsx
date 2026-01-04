@@ -20,7 +20,7 @@ import {
   rectIntersection,
   type UniqueIdentifier,
 } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
+// SortableContext is used at heat/category/class level, not top-level
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 
 import type {
@@ -43,7 +43,6 @@ import {
   categories,
   NUM_HEATS,
   getClassById,
-  getCategoryById,
 } from "@/data/heatsData";
 
 import { HeatColumn, HeatsContainer } from "./HeatColumn";
@@ -158,12 +157,12 @@ export function HeatsBoard() {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 5,
+        distance: 3, // Reduced for faster response
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
+        delay: 100, // Reduced from 250ms
         tolerance: 5,
       },
     }),
@@ -177,21 +176,6 @@ export function HeatsBoard() {
     () => computeHeatsFromDrivers(drivers, carClasses, categories, NUM_HEATS),
     [drivers]
   );
-
-  // Get all sortable IDs for SortableContext
-  const allSortableIds = useMemo(() => {
-    const ids: string[] = [];
-    heatsData.forEach((heat) => {
-      heat.categories.forEach((cat) => {
-        ids.push(`category-${cat.categoryId}-heat-${heat.heatNum}`);
-        cat.classes.forEach((cls) => {
-          ids.push(`class-${cls.classId}-heat-${heat.heatNum}`);
-        });
-      });
-    });
-    drivers.forEach((d) => ids.push(String(d.id)));
-    return ids;
-  }, [heatsData, drivers]);
 
   // Extract the target heat number from a drag event
   const getTargetHeatNum = useCallback(
@@ -414,15 +398,13 @@ export function HeatsBoard() {
       onDragEnd={onDragEnd}
     >
       <HeatsContainer>
-        <SortableContext items={allSortableIds}>
-          {heatsData.map((heat) => (
-            <HeatColumn
-              key={heat.heatNum}
-              heatData={heat}
-              onAssignmentChange={onAssignmentChange}
-            />
-          ))}
-        </SortableContext>
+        {heatsData.map((heat) => (
+          <HeatColumn
+            key={heat.heatNum}
+            heatData={heat}
+            onAssignmentChange={onAssignmentChange}
+          />
+        ))}
       </HeatsContainer>
 
       {typeof window !== "undefined" &&

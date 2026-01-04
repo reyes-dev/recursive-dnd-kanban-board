@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,16 @@ type CategoryCardProps = {
   ) => void;
 };
 
-export function CategoryCard({
+const variants = cva("", {
+  variants: {
+    dragging: {
+      over: "ring-2 ring-emerald-500 opacity-50 scale-[1.01]",
+      overlay: "ring-2 ring-emerald-500 shadow-lg scale-[1.01]",
+    },
+  },
+});
+
+export const CategoryCard = memo(function CategoryCard({
   categoryData,
   heatNum,
   isOverlay,
@@ -51,20 +60,10 @@ export function CategoryCard({
     },
   });
 
-  // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
     transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
   };
-
-  const variants = cva("", {
-    variants: {
-      dragging: {
-        over: "ring-2 ring-emerald-500 opacity-50 scale-[1.01] transition-all duration-200",
-        overlay: "ring-2 ring-emerald-500 shadow-lg scale-[1.01]",
-      },
-    },
-  });
 
   const classIds = useMemo(
     () => categoryData.classes.map((c) => `class-${c.classId}-heat-${heatNum}`),
@@ -77,14 +76,14 @@ export function CategoryCard({
       style={style}
       className={`${variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-      })} transition-all duration-200 bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50`}
+      })} bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50`}
     >
       <CardHeader className="p-3 pb-2 flex flex-row items-center gap-2 border-b border-emerald-200 dark:border-emerald-800/50">
         <Button
           variant="ghost"
           {...attributes}
           {...listeners}
-          className="p-1 text-muted-foreground h-auto cursor-grab hover:text-foreground transition-colors shrink-0"
+          className="p-1 text-muted-foreground h-auto cursor-grab hover:text-foreground shrink-0"
         >
           <span className="sr-only">Move category</span>
           <GripVertical className="h-4 w-4" />
@@ -118,4 +117,4 @@ export function CategoryCard({
       </CardContent>
     </Card>
   );
-}
+});

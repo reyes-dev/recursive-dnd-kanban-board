@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,16 @@ type ClassCardProps = {
   ) => void;
 };
 
-export function ClassCard({
+const variants = cva("", {
+  variants: {
+    dragging: {
+      over: "ring-2 ring-amber-500 opacity-50 scale-[1.02]",
+      overlay: "ring-2 ring-amber-500 shadow-lg scale-[1.02]",
+    },
+  },
+});
+
+export const ClassCard = memo(function ClassCard({
   classData,
   categoryId,
   heatNum,
@@ -54,22 +63,10 @@ export function ClassCard({
     },
   });
 
-  // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
-    transform: transform
-      ? `translate3d(0, ${transform.y}px, 0)`
-      : undefined,
+    transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
   };
-
-  const variants = cva("", {
-    variants: {
-      dragging: {
-        over: "ring-2 ring-amber-500 opacity-50 scale-[1.02] transition-all duration-200",
-        overlay: "ring-2 ring-amber-500 shadow-lg scale-[1.02]",
-      },
-    },
-  });
 
   const driverIds = useMemo(
     () => classData.drivers.map((d) => d.id),
@@ -82,14 +79,14 @@ export function ClassCard({
       style={style}
       className={`${variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-      })} transition-all duration-200 bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/50`}
+      })} bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/50`}
     >
       <CardHeader className="p-2 pb-1 flex flex-row items-center gap-2">
         <Button
           variant="ghost"
           {...attributes}
           {...listeners}
-          className="p-1 text-muted-foreground h-auto cursor-grab hover:text-foreground transition-colors shrink-0"
+          className="p-1 text-muted-foreground h-auto cursor-grab hover:text-foreground shrink-0"
         >
           <span className="sr-only">Move class</span>
           <GripVertical className="h-4 w-4" />
@@ -121,5 +118,4 @@ export function ClassCard({
       </CardContent>
     </Card>
   );
-}
-
+});

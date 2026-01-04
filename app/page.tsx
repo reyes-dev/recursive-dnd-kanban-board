@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { HeatsBoard } from "@/components/board/HeatsBoard";
 import Header from "@/components/shared/Header";
@@ -9,8 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Driver } from "@/data/types";
 import { initialDrivers } from "@/data/heatsData";
 
-export default function App() {
-  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+// Component that uses useSearchParams must be wrapped in Suspense
+function TabsWithQueryParams({
+  drivers,
+  setDrivers,
+}: {
+  drivers: Driver[];
+  setDrivers: React.Dispatch<React.SetStateAction<Driver[]>>;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -27,6 +33,29 @@ export default function App() {
   };
 
   return (
+    <Tabs
+      value={activeTab}
+      onValueChange={handleTabChange}
+      className="flex-1 flex flex-col px-4"
+    >
+      <TabsList className="self-center">
+        <TabsTrigger value="heats">Heats</TabsTrigger>
+        <TabsTrigger value="work-assignments">Work Assignments</TabsTrigger>
+      </TabsList>
+      <TabsContent value="heats" className="flex-1 overflow-hidden">
+        <HeatsBoard drivers={drivers} setDrivers={setDrivers} />
+      </TabsContent>
+      <TabsContent value="work-assignments" className="flex-1 overflow-auto">
+        <WorkAssignmentsTable drivers={drivers} setDrivers={setDrivers} />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+export default function App() {
+  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+
+  return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex flex-col gap-4 flex-1 overflow-hidden">
@@ -39,25 +68,15 @@ export default function App() {
           </p>
         </div>
 
-        <Tabs
-          value={activeTab}
-          onValueChange={handleTabChange}
-          className="flex-1 flex flex-col px-4"
+        <Suspense
+          fallback={
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-muted-foreground">Loading...</div>
+            </div>
+          }
         >
-          <TabsList className="self-center">
-            <TabsTrigger value="heats">Heats</TabsTrigger>
-            <TabsTrigger value="work-assignments">Work Assignments</TabsTrigger>
-          </TabsList>
-          <TabsContent value="heats" className="flex-1 overflow-hidden">
-            <HeatsBoard drivers={drivers} setDrivers={setDrivers} />
-          </TabsContent>
-          <TabsContent
-            value="work-assignments"
-            className="flex-1 overflow-auto"
-          >
-            <WorkAssignmentsTable drivers={drivers} setDrivers={setDrivers} />
-          </TabsContent>
-        </Tabs>
+          <TabsWithQueryParams drivers={drivers} setDrivers={setDrivers} />
+        </Suspense>
       </main>
     </div>
   );

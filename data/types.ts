@@ -17,6 +17,13 @@ export const WORK_ASSIGNMENTS = [
 
 export type WorkAssignmentId = (typeof WORK_ASSIGNMENTS)[number]["id"];
 
+export type WorkAssignmentDetails = {
+  id: WorkAssignmentId;
+  name: string;
+  min: number;
+  max: number;
+};
+
 // ============================================
 // Core Domain Types
 // ============================================

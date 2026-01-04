@@ -1,4 +1,10 @@
-import type { Category, CarClass, Driver, WorkAssignmentId } from "./types";
+import type {
+  Category,
+  CarClass,
+  Driver,
+  WorkAssignmentId,
+  WorkAssignmentDetails,
+} from "./types";
 
 // Work assignment rotation for variety
 const workAssignments: WorkAssignmentId[] = [
@@ -10,6 +16,21 @@ const workAssignments: WorkAssignmentId[] = [
   "tech-inspection",
   "registration",
   "none",
+];
+
+// ============================================
+// Work Assignment Details with min/max requirements
+// ============================================
+
+export const workAssignmentsDetails: WorkAssignmentDetails[] = [
+  { id: "course-worker", name: "Course Worker", min: 1, max: 4 },
+  { id: "timer", name: "Timer", min: 1, max: 2 },
+  { id: "grid", name: "Grid", min: 1, max: 3 },
+  { id: "announcer", name: "Announcer", min: 1, max: 2 },
+  { id: "start-line", name: "Start Line", min: 1, max: 3 },
+  { id: "tech-inspection", name: "Tech Inspection", min: 1, max: 4 },
+  { id: "registration", name: "Registration", min: 1, max: 2 },
+  { id: "none", name: "No Assignment", min: 1, max: 4 },
 ];
 
 // ============================================
@@ -591,4 +612,3 @@ export const getCategoryById = (categoryId: string): Category | undefined => {
 // ============================================
 
 export const NUM_HEATS = 4;
-

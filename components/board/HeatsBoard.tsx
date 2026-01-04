@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useMemo, useState } from "react";
+import React, { useCallback, useId, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import {
@@ -38,7 +38,6 @@ import type {
   WorkAssignmentId,
 } from "@/data/types";
 import {
-  initialDrivers,
   carClasses,
   categories,
   NUM_HEATS,
@@ -141,11 +140,19 @@ function computeHeatsFromDrivers(
 }
 
 // ============================================
+// Props Interface
+// ============================================
+
+interface HeatsBoardProps {
+  drivers: Driver[];
+  setDrivers: React.Dispatch<React.SetStateAction<Driver[]>>;
+}
+
+// ============================================
 // Main HeatsBoard Component
 // ============================================
 
-export function HeatsBoard() {
-  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+export function HeatsBoard({ drivers, setDrivers }: HeatsBoardProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryDragData | null>(
     null
   );

@@ -1,10 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { HeatsBoard } from "@/components/board/HeatsBoard";
-import React from "react";
 import Header from "@/components/shared/Header";
+import { WorkAssignmentsTable } from "@/components/board/WorkAssignmentsTable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { Driver } from "@/data/types";
+import { initialDrivers } from "@/data/heatsData";
 
 export default function App() {
+  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -17,7 +23,22 @@ export default function App() {
             Drag categories, classes, or individual drivers between heats
           </p>
         </div>
-        <HeatsBoard />
+
+        <Tabs defaultValue="heats" className="flex-1 flex flex-col px-4">
+          <TabsList className="self-center">
+            <TabsTrigger value="heats">Heats</TabsTrigger>
+            <TabsTrigger value="work-assignments">Work Assignments</TabsTrigger>
+          </TabsList>
+          <TabsContent value="heats" className="flex-1 overflow-hidden">
+            <HeatsBoard drivers={drivers} setDrivers={setDrivers} />
+          </TabsContent>
+          <TabsContent
+            value="work-assignments"
+            className="flex-1 overflow-auto"
+          >
+            <WorkAssignmentsTable drivers={drivers} setDrivers={setDrivers} />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

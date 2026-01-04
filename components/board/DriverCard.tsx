@@ -5,14 +5,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
-import type { Driver, DriverDragData } from "@/data/types";
+import type { Driver, DriverDragData, WorkAssignmentId } from "@/data/types";
+import { SelectAssignment } from "./SelectAssignment";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 
 type DriverCardProps = {
   driver: Driver;
   isOverlay?: boolean;
+  onAssignmentChange?: (
+    driverId: UniqueIdentifier,
+    assignment: WorkAssignmentId
+  ) => void;
 };
 
-export function DriverCard({ driver, isOverlay }: DriverCardProps) {
+export function DriverCard({
+  driver,
+  isOverlay,
+  onAssignmentChange,
+}: DriverCardProps) {
   const {
     setNodeRef,
     attributes,
@@ -46,6 +56,10 @@ export function DriverCard({ driver, isOverlay }: DriverCardProps) {
     },
   });
 
+  const handleAssignmentChange = (value: WorkAssignmentId) => {
+    onAssignmentChange?.(driver.id, value);
+  };
+
   return (
     <Card
       ref={setNodeRef}
@@ -54,27 +68,39 @@ export function DriverCard({ driver, isOverlay }: DriverCardProps) {
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })} transition-all duration-200 hover:shadow-md bg-card`}
     >
-      <CardContent className="p-3 flex items-center gap-3">
-        <Button
-          variant="ghost"
-          {...attributes}
-          {...listeners}
-          className="p-1 text-muted-foreground -ml-1 h-auto cursor-grab hover:text-foreground transition-colors shrink-0"
-        >
-          <span className="sr-only">Move driver</span>
-          <GripVertical className="h-4 w-4" />
-        </Button>
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <span className="font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded text-sm shrink-0">
-            #{driver.carNumber}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="font-medium text-sm truncate">{driver.driverName}</p>
-            <p className="text-xs text-muted-foreground truncate">
-              {driver.carName}
-            </p>
+      <CardContent className="p-3 flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            {...attributes}
+            {...listeners}
+            className="p-1 text-muted-foreground -ml-1 h-auto cursor-grab hover:text-foreground transition-colors shrink-0"
+          >
+            <span className="sr-only">Move driver</span>
+            <GripVertical className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <span className="font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded text-sm shrink-0">
+              #{driver.carNumber}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-sm truncate">
+                {driver.driverName}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {driver.carName}
+              </p>
+            </div>
           </div>
         </div>
+        {!isOverlay && onAssignmentChange && (
+          <div className="ml-6">
+            <SelectAssignment
+              value={driver.workAssignment}
+              onValueChange={handleAssignmentChange}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -1,6 +1,23 @@
 import type { UniqueIdentifier } from "@dnd-kit/core";
 
 // ============================================
+// Work Assignments
+// ============================================
+
+export const WORK_ASSIGNMENTS = [
+  { id: "course-worker", label: "Course Worker" },
+  { id: "timer", label: "Timer" },
+  { id: "grid", label: "Grid" },
+  { id: "announcer", label: "Announcer" },
+  { id: "start-line", label: "Start Line" },
+  { id: "tech-inspection", label: "Tech Inspection" },
+  { id: "registration", label: "Registration" },
+  { id: "none", label: "No Assignment" },
+] as const;
+
+export type WorkAssignmentId = (typeof WORK_ASSIGNMENTS)[number]["id"];
+
+// ============================================
 // Core Domain Types
 // ============================================
 
@@ -11,6 +28,7 @@ export type Driver = {
   carName: string;
   carClass: string;
   assignedHeat: number;
+  workAssignment: WorkAssignmentId;
 };
 
 export type CarClass = {

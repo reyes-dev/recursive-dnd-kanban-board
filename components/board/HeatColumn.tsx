@@ -7,14 +7,19 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { cva } from "class-variance-authority";
-import type { HeatDisplay, HeatDropData } from "@/data/types";
+import type { HeatDisplay, HeatDropData, WorkAssignmentId } from "@/data/types";
 import { CategoryCard } from "./CategoryCard";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 
 type HeatColumnProps = {
   heatData: HeatDisplay;
+  onAssignmentChange?: (
+    driverId: UniqueIdentifier,
+    assignment: WorkAssignmentId
+  ) => void;
 };
 
-export function HeatColumn({ heatData }: HeatColumnProps) {
+export function HeatColumn({ heatData, onAssignmentChange }: HeatColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `heat-${heatData.heatNum}`,
     data: {
@@ -74,6 +79,7 @@ export function HeatColumn({ heatData }: HeatColumnProps) {
                   key={categoryData.categoryId}
                   categoryData={categoryData}
                   heatNum={heatData.heatNum}
+                  onAssignmentChange={onAssignmentChange}
                 />
               ))
             )}

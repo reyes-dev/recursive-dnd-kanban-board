@@ -7,14 +7,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
-import type { ClassDisplay, ClassDragData } from "@/data/types";
+import type {
+  ClassDisplay,
+  ClassDragData,
+  WorkAssignmentId,
+} from "@/data/types";
 import { DriverCard } from "./DriverCard";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 
 type ClassCardProps = {
   classData: ClassDisplay;
   categoryId: string;
   heatNum: number;
   isOverlay?: boolean;
+  onAssignmentChange?: (
+    driverId: UniqueIdentifier,
+    assignment: WorkAssignmentId
+  ) => void;
 };
 
 export function ClassCard({
@@ -22,6 +31,7 @@ export function ClassCard({
   categoryId,
   heatNum,
   isOverlay,
+  onAssignmentChange,
 }: ClassCardProps) {
   const {
     setNodeRef,
@@ -100,7 +110,11 @@ export function ClassCard({
         <SortableContext items={driverIds}>
           <div className="flex flex-col gap-1.5 ml-2">
             {classData.drivers.map((driver) => (
-              <DriverCard key={driver.id} driver={driver} />
+              <DriverCard
+                key={driver.id}
+                driver={driver}
+                onAssignmentChange={onAssignmentChange}
+              />
             ))}
           </div>
         </SortableContext>

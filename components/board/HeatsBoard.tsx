@@ -18,6 +18,7 @@ import {
   DataRef,
   pointerWithin,
   rectIntersection,
+  type UniqueIdentifier,
 } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
@@ -34,6 +35,7 @@ import type {
   ClassDragData,
   DriverDragData,
   HeatDropData,
+  WorkAssignmentId,
 } from "@/data/types";
 import {
   initialDrivers,
@@ -333,6 +335,23 @@ export function HeatsBoard() {
   );
 
   // ============================================
+  // Work Assignment Handler
+  // ============================================
+
+  const onAssignmentChange = useCallback(
+    (driverId: UniqueIdentifier, assignment: WorkAssignmentId) => {
+      setDrivers((prev) =>
+        prev.map((driver) =>
+          driver.id === driverId
+            ? { ...driver, workAssignment: assignment }
+            : driver
+        )
+      );
+    },
+    []
+  );
+
+  // ============================================
   // Render overlay components for drag preview
   // ============================================
 
@@ -397,7 +416,11 @@ export function HeatsBoard() {
       <HeatsContainer>
         <SortableContext items={allSortableIds}>
           {heatsData.map((heat) => (
-            <HeatColumn key={heat.heatNum} heatData={heat} />
+            <HeatColumn
+              key={heat.heatNum}
+              heatData={heat}
+              onAssignmentChange={onAssignmentChange}
+            />
           ))}
         </SortableContext>
       </HeatsContainer>

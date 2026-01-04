@@ -7,19 +7,29 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
-import type { CategoryDisplay, CategoryDragData } from "@/data/types";
+import type {
+  CategoryDisplay,
+  CategoryDragData,
+  WorkAssignmentId,
+} from "@/data/types";
 import { ClassCard } from "./ClassCard";
+import type { UniqueIdentifier } from "@dnd-kit/core";
 
 type CategoryCardProps = {
   categoryData: CategoryDisplay;
   heatNum: number;
   isOverlay?: boolean;
+  onAssignmentChange?: (
+    driverId: UniqueIdentifier,
+    assignment: WorkAssignmentId
+  ) => void;
 };
 
 export function CategoryCard({
   categoryData,
   heatNum,
   isOverlay,
+  onAssignmentChange,
 }: CategoryCardProps) {
   const {
     setNodeRef,
@@ -44,9 +54,7 @@ export function CategoryCard({
   // Only apply Y-axis transform to prevent horizontal shifting within column
   const style = {
     transition,
-    transform: transform
-      ? `translate3d(0, ${transform.y}px, 0)`
-      : undefined,
+    transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
   };
 
   const variants = cva("", {
@@ -59,8 +67,7 @@ export function CategoryCard({
   });
 
   const classIds = useMemo(
-    () =>
-      categoryData.classes.map((c) => `class-${c.classId}-heat-${heatNum}`),
+    () => categoryData.classes.map((c) => `class-${c.classId}-heat-${heatNum}`),
     [categoryData.classes, heatNum]
   );
 
@@ -103,6 +110,7 @@ export function CategoryCard({
                 classData={classData}
                 categoryId={categoryData.categoryId}
                 heatNum={heatNum}
+                onAssignmentChange={onAssignmentChange}
               />
             ))}
           </div>
@@ -111,4 +119,3 @@ export function CategoryCard({
     </Card>
   );
 }
-

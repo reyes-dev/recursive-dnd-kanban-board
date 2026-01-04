@@ -1,4 +1,16 @@
-import type { Category, CarClass, Driver } from "./types";
+import type { Category, CarClass, Driver, WorkAssignmentId } from "./types";
+
+// Work assignment rotation for variety
+const workAssignments: WorkAssignmentId[] = [
+  "course-worker",
+  "timer",
+  "grid",
+  "announcer",
+  "start-line",
+  "tech-inspection",
+  "registration",
+  "none",
+];
 
 // ============================================
 // Categories - Top level groupings
@@ -93,6 +105,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Chevrolet Corvette Z06",
     carClass: "ss",
     assignedHeat: 1,
+    workAssignment: workAssignments[0],
   },
   {
     id: "driver-2",
@@ -101,6 +114,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Porsche 911 GT3",
     carClass: "ss",
     assignedHeat: 1,
+    workAssignment: workAssignments[1],
   },
   {
     id: "driver-3",
@@ -109,6 +123,7 @@ export const initialDrivers: Driver[] = [
     carName: "2024 BMW M4 Competition",
     carClass: "as",
     assignedHeat: 1,
+    workAssignment: workAssignments[2],
   },
   {
     id: "driver-4",
@@ -117,6 +132,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Audi RS5",
     carClass: "as",
     assignedHeat: 1,
+    workAssignment: workAssignments[3],
   },
   {
     id: "driver-5",
@@ -125,6 +141,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Ford Mustang GT",
     carClass: "bs",
     assignedHeat: 1,
+    workAssignment: workAssignments[4],
   },
   {
     id: "driver-6",
@@ -133,6 +150,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Mazda MX-5 Miata",
     carClass: "cs",
     assignedHeat: 1,
+    workAssignment: workAssignments[5],
   },
 
   // Heat 1 - STREET TOURING drivers
@@ -143,6 +161,7 @@ export const initialDrivers: Driver[] = [
     carName: "2021 Subaru BRZ",
     carClass: "str",
     assignedHeat: 1,
+    workAssignment: workAssignments[6],
   },
   {
     id: "driver-8",
@@ -151,6 +170,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Toyota GR86",
     carClass: "str",
     assignedHeat: 1,
+    workAssignment: workAssignments[7],
   },
   {
     id: "driver-9",
@@ -159,6 +179,7 @@ export const initialDrivers: Driver[] = [
     carName: "2020 Honda Civic Si",
     carClass: "sts",
     assignedHeat: 1,
+    workAssignment: workAssignments[0],
   },
 
   // Heat 2 - STREET drivers
@@ -169,6 +190,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Tesla Model 3 Performance",
     carClass: "ds",
     assignedHeat: 2,
+    workAssignment: workAssignments[1],
   },
   {
     id: "driver-11",
@@ -177,6 +199,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Volkswagen Golf R",
     carClass: "ds",
     assignedHeat: 2,
+    workAssignment: workAssignments[2],
   },
   {
     id: "driver-12",
@@ -185,6 +208,7 @@ export const initialDrivers: Driver[] = [
     carName: "2021 Mini Cooper S",
     carClass: "es",
     assignedHeat: 2,
+    workAssignment: workAssignments[3],
   },
 
   // Heat 2 - SUPER STREET drivers
@@ -195,6 +219,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Porsche Cayman GT4",
     carClass: "ssr",
     assignedHeat: 2,
+    workAssignment: workAssignments[4],
   },
   {
     id: "driver-14",
@@ -203,6 +228,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Lotus Emira",
     carClass: "ssr",
     assignedHeat: 2,
+    workAssignment: workAssignments[5],
   },
   {
     id: "driver-15",
@@ -211,6 +237,7 @@ export const initialDrivers: Driver[] = [
     carName: "2021 Chevrolet Corvette C8",
     carClass: "ssc",
     assignedHeat: 2,
+    workAssignment: workAssignments[6],
   },
 
   // Heat 2 - PREPARED drivers
@@ -221,6 +248,7 @@ export const initialDrivers: Driver[] = [
     carName: "1990 Mazda Miata (Built)",
     carClass: "cp",
     assignedHeat: 2,
+    workAssignment: workAssignments[7],
   },
   {
     id: "driver-17",
@@ -229,6 +257,7 @@ export const initialDrivers: Driver[] = [
     carName: "1995 Honda CRX (Built)",
     carClass: "dp",
     assignedHeat: 2,
+    workAssignment: workAssignments[0],
   },
 
   // Heat 3 - STREET MODIFIED drivers
@@ -239,6 +268,7 @@ export const initialDrivers: Driver[] = [
     carName: "2019 Nissan 370Z (Modified)",
     carClass: "sm",
     assignedHeat: 3,
+    workAssignment: workAssignments[1],
   },
   {
     id: "driver-19",
@@ -247,6 +277,7 @@ export const initialDrivers: Driver[] = [
     carName: "2018 Ford Focus RS (Modified)",
     carClass: "sm",
     assignedHeat: 3,
+    workAssignment: workAssignments[2],
   },
   {
     id: "driver-20",
@@ -255,6 +286,7 @@ export const initialDrivers: Driver[] = [
     carName: "2020 Subaru WRX STI (Modified)",
     carClass: "ssm",
     assignedHeat: 3,
+    workAssignment: workAssignments[3],
   },
 
   // Heat 3 - STREET PREPARED drivers
@@ -265,6 +297,7 @@ export const initialDrivers: Driver[] = [
     carName: "2017 Mazda MX-5 (Prepared)",
     carClass: "csp",
     assignedHeat: 3,
+    workAssignment: workAssignments[4],
   },
   {
     id: "driver-22",
@@ -273,6 +306,7 @@ export const initialDrivers: Driver[] = [
     carName: "2019 BMW M2 (Prepared)",
     carClass: "asp",
     assignedHeat: 3,
+    workAssignment: workAssignments[5],
   },
   {
     id: "driver-23",
@@ -281,6 +315,7 @@ export const initialDrivers: Driver[] = [
     carName: "2016 Porsche Cayman S (Prepared)",
     carClass: "bsp",
     assignedHeat: 3,
+    workAssignment: workAssignments[6],
   },
 
   // Heat 3 - MODIFIED drivers
@@ -291,6 +326,7 @@ export const initialDrivers: Driver[] = [
     carName: "Custom Formula X",
     carClass: "am",
     assignedHeat: 3,
+    workAssignment: workAssignments[7],
   },
   {
     id: "driver-25",
@@ -299,6 +335,7 @@ export const initialDrivers: Driver[] = [
     carName: "Stohr WF1",
     carClass: "bm",
     assignedHeat: 3,
+    workAssignment: workAssignments[0],
   },
 
   // Heat 4 - CAM drivers
@@ -309,6 +346,7 @@ export const initialDrivers: Driver[] = [
     carName: "1969 Chevrolet Camaro Z28",
     carClass: "cam-t",
     assignedHeat: 4,
+    workAssignment: workAssignments[1],
   },
   {
     id: "driver-27",
@@ -317,6 +355,7 @@ export const initialDrivers: Driver[] = [
     carName: "1970 Ford Mustang Boss 302",
     carClass: "cam-t",
     assignedHeat: 4,
+    workAssignment: workAssignments[2],
   },
   {
     id: "driver-28",
@@ -325,6 +364,7 @@ export const initialDrivers: Driver[] = [
     carName: "2020 Dodge Challenger Hellcat",
     carClass: "cam-s",
     assignedHeat: 4,
+    workAssignment: workAssignments[3],
   },
   {
     id: "driver-29",
@@ -333,6 +373,7 @@ export const initialDrivers: Driver[] = [
     carName: "2019 Chevrolet Camaro ZL1",
     carClass: "cam-s",
     assignedHeat: 4,
+    workAssignment: workAssignments[4],
   },
   {
     id: "driver-30",
@@ -341,6 +382,7 @@ export const initialDrivers: Driver[] = [
     carName: "2018 Ford Mustang GT350",
     carClass: "cam-c",
     assignedHeat: 4,
+    workAssignment: workAssignments[5],
   },
 
   // Heat 4 - STREET TOURING additional drivers
@@ -351,6 +393,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Toyota GR86",
     carClass: "stx",
     assignedHeat: 4,
+    workAssignment: workAssignments[6],
   },
   {
     id: "driver-32",
@@ -359,6 +402,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Hyundai Veloster N",
     carClass: "sth",
     assignedHeat: 4,
+    workAssignment: workAssignments[7],
   },
   {
     id: "driver-33",
@@ -367,6 +411,7 @@ export const initialDrivers: Driver[] = [
     carName: "2021 Volkswagen GTI",
     carClass: "sth",
     assignedHeat: 4,
+    workAssignment: workAssignments[0],
   },
 
   // Additional drivers for variety
@@ -377,6 +422,7 @@ export const initialDrivers: Driver[] = [
     carName: "2020 Chevrolet Camaro SS",
     carClass: "fs",
     assignedHeat: 1,
+    workAssignment: workAssignments[1],
   },
   {
     id: "driver-35",
@@ -385,6 +431,7 @@ export const initialDrivers: Driver[] = [
     carName: "2019 Hyundai Genesis Coupe",
     carClass: "gs",
     assignedHeat: 2,
+    workAssignment: workAssignments[2],
   },
   {
     id: "driver-36",
@@ -393,6 +440,7 @@ export const initialDrivers: Driver[] = [
     carName: "2022 Honda Civic Sport",
     carClass: "hs",
     assignedHeat: 3,
+    workAssignment: workAssignments[3],
   },
   {
     id: "driver-37",
@@ -401,6 +449,7 @@ export const initialDrivers: Driver[] = [
     carName: "2023 Lotus Evora GT",
     carClass: "ssl",
     assignedHeat: 2,
+    workAssignment: workAssignments[4],
   },
   {
     id: "driver-38",
@@ -409,6 +458,7 @@ export const initialDrivers: Driver[] = [
     carName: "2021 Audi TT RS",
     carClass: "stu",
     assignedHeat: 1,
+    workAssignment: workAssignments[5],
   },
   {
     id: "driver-39",
@@ -417,6 +467,7 @@ export const initialDrivers: Driver[] = [
     carName: "2018 Porsche 718 Boxster S (Modified)",
     carClass: "sml",
     assignedHeat: 3,
+    workAssignment: workAssignments[6],
   },
   {
     id: "driver-40",
@@ -425,6 +476,7 @@ export const initialDrivers: Driver[] = [
     carName: "2017 Nissan 350Z (Prepared)",
     carClass: "dsp",
     assignedHeat: 4,
+    workAssignment: workAssignments[7],
   },
   {
     id: "driver-41",
@@ -433,6 +485,7 @@ export const initialDrivers: Driver[] = [
     carName: "2016 Subaru BRZ (Prepared)",
     carClass: "esp",
     assignedHeat: 1,
+    workAssignment: workAssignments[0],
   },
   {
     id: "driver-42",
@@ -441,6 +494,7 @@ export const initialDrivers: Driver[] = [
     carName: "1992 Mazda Miata (Built)",
     carClass: "ep",
     assignedHeat: 2,
+    workAssignment: workAssignments[1],
   },
   {
     id: "driver-43",
@@ -449,6 +503,7 @@ export const initialDrivers: Driver[] = [
     carName: "1988 Honda CRX Si (Built)",
     carClass: "fp",
     assignedHeat: 4,
+    workAssignment: workAssignments[2],
   },
   {
     id: "driver-44",
@@ -457,6 +512,7 @@ export const initialDrivers: Driver[] = [
     carName: "Radical SR3",
     carClass: "cm",
     assignedHeat: 3,
+    workAssignment: workAssignments[3],
   },
   {
     id: "driver-45",
@@ -465,6 +521,7 @@ export const initialDrivers: Driver[] = [
     carName: "Spec Racer Ford",
     carClass: "dm",
     assignedHeat: 4,
+    workAssignment: workAssignments[4],
   },
   {
     id: "driver-46",
@@ -473,6 +530,7 @@ export const initialDrivers: Driver[] = [
     carName: "Formula Vee",
     carClass: "fm",
     assignedHeat: 1,
+    workAssignment: workAssignments[5],
   },
   {
     id: "driver-47",
@@ -481,6 +539,7 @@ export const initialDrivers: Driver[] = [
     carName: "Shifter Kart",
     carClass: "km",
     assignedHeat: 2,
+    workAssignment: workAssignments[6],
   },
   {
     id: "driver-48",
@@ -489,6 +548,7 @@ export const initialDrivers: Driver[] = [
     carName: "2015 Dodge Viper ACR (Prepared)",
     carClass: "xp",
     assignedHeat: 3,
+    workAssignment: workAssignments[7],
   },
   {
     id: "driver-49",
@@ -497,6 +557,7 @@ export const initialDrivers: Driver[] = [
     carName: "2019 Chevrolet Corvette ZR1 (Prepared)",
     carClass: "ssp",
     assignedHeat: 4,
+    workAssignment: workAssignments[0],
   },
   {
     id: "driver-50",
@@ -505,6 +566,7 @@ export const initialDrivers: Driver[] = [
     carName: "2020 Ford Mustang Shelby GT500 (Prepared)",
     carClass: "fsp",
     assignedHeat: 1,
+    workAssignment: workAssignments[1],
   },
 ];
 

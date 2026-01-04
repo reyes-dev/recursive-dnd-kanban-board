@@ -21,6 +21,7 @@ import {
   NUM_HEATS,
 } from "@/data/heatsData";
 import { AddAssignmentModal } from "./AddAssignmentModal";
+import { SelectAssignment } from "./SelectAssignment";
 
 // ============================================
 // Props Interface
@@ -287,6 +288,17 @@ export function WorkAssignmentsTable({
                             <span className="text-xs text-muted-foreground">
                               {getCategoryName(driver.carClass)}
                             </span>
+                            <div className="ml-auto w-[140px]">
+                              <SelectAssignment
+                                value={driver.workAssignment}
+                                onValueChange={(newAssignment) =>
+                                  handleAssignDriver(
+                                    String(driver.id),
+                                    newAssignment
+                                  )
+                                }
+                              />
+                            </div>
                           </div>
                         </TableCell>
                       </TableRow>

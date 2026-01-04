@@ -30,7 +30,7 @@ export const workAssignmentsDetails: WorkAssignmentDetails[] = [
   { id: "start-line", name: "Start Line", min: 1, max: 3 },
   { id: "tech-inspection", name: "Tech Inspection", min: 1, max: 4 },
   { id: "registration", name: "Registration", min: 1, max: 2 },
-  { id: "none", name: "No Assignment", min: 1, max: 4 },
+  { id: "none", name: "No Assignment", min: 0, max: 4 },
 ];
 
 // ============================================

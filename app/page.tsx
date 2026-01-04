@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { HeatsBoard } from "@/components/board/HeatsBoard";
 import Header from "@/components/shared/Header";
 import { WorkAssignmentsTable } from "@/components/board/WorkAssignmentsTable";
@@ -10,6 +11,20 @@ import { initialDrivers } from "@/data/heatsData";
 
 export default function App() {
   const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Get the tab from query params, default to "heats"
+  const tabParam = searchParams.get("tab");
+  const defaultTab =
+    tabParam === "work-assignments" ? "work-assignments" : "heats";
+  const [activeTab, setActiveTab] = useState(defaultTab);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Update URL without page reload
+    router.push(`?tab=${value}`, { scroll: false });
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -24,7 +39,11 @@ export default function App() {
           </p>
         </div>
 
-        <Tabs defaultValue="heats" className="flex-1 flex flex-col px-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={handleTabChange}
+          className="flex-1 flex flex-col px-4"
+        >
           <TabsList className="self-center">
             <TabsTrigger value="heats">Heats</TabsTrigger>
             <TabsTrigger value="work-assignments">Work Assignments</TabsTrigger>

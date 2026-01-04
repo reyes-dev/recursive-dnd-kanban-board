@@ -10,10 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Driver, WorkAssignmentId } from "@/data/types";
-import { workAssignmentsDetails, carClasses, categories } from "@/data/heatsData";
+import {
+  workAssignmentsDetails,
+  carClasses,
+  categories,
+  NUM_HEATS,
+} from "@/data/heatsData";
 import { AddAssignmentModal } from "./AddAssignmentModal";
 
 // ============================================
@@ -66,13 +72,24 @@ export function WorkAssignmentsTable({
   drivers,
   setDrivers,
 }: WorkAssignmentsTableProps) {
+  const [selectedHeat, setSelectedHeat] = useState<number>(1);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Compute work assignment data from drivers
+  // Generate heat numbers array
+  const heatNumbers = useMemo(() => {
+    return Array.from({ length: NUM_HEATS }, (_, i) => i + 1);
+  }, []);
+
+  // Filter drivers by selected heat
+  const heatDrivers = useMemo(() => {
+    return drivers.filter((d) => d.assignedHeat === selectedHeat);
+  }, [drivers, selectedHeat]);
+
+  // Compute work assignment data from drivers in the selected heat
   const workAssignmentData = useMemo<WorkAssignmentDisplay[]>(() => {
     return workAssignmentsDetails.map((assignment) => {
-      const assignedDrivers = drivers.filter(
+      const assignedDrivers = heatDrivers.filter(
         (d) => d.workAssignment === assignment.id
       );
       return {
@@ -84,7 +101,7 @@ export function WorkAssignmentsTable({
         drivers: assignedDrivers,
       };
     });
-  }, [drivers]);
+  }, [heatDrivers]);
 
   const toggleRow = (assignmentId: string) => {
     setExpandedRows((prev) => {
@@ -122,26 +139,61 @@ export function WorkAssignmentsTable({
     }
     if (assigned > max) {
       return (
-        <Badge variant="secondary" className="text-xs bg-amber-500/20 text-amber-600">
+        <Badge
+          variant="secondary"
+          className="text-xs bg-amber-500/20 text-amber-600"
+        >
           Overstaffed
         </Badge>
       );
     }
     return (
-      <Badge variant="secondary" className="text-xs bg-emerald-500/20 text-emerald-600">
+      <Badge
+        variant="secondary"
+        className="text-xs bg-emerald-500/20 text-emerald-600"
+      >
         Good
       </Badge>
     );
   };
 
+  // Get total drivers in selected heat
+  const totalHeatDrivers = heatDrivers.length;
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Work Assignments Overview</h2>
-        <Button onClick={() => setIsModalOpen(true)} size="sm">
-          <Plus className="h-4 w-4 mr-1" />
-          Add Assignment
-        </Button>
+      {/* Heat Selector Tabs */}
+      <Tabs
+        value={String(selectedHeat)}
+        onValueChange={(value) => {
+          setSelectedHeat(Number(value));
+          setExpandedRows(new Set()); // Reset expanded rows when switching heats
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-semibold">Work Assignments</h2>
+            <TabsList>
+              {heatNumbers.map((heatNum) => (
+                <TabsTrigger key={heatNum} value={String(heatNum)}>
+                  Heat {heatNum}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+          <Button onClick={() => setIsModalOpen(true)} size="sm">
+            <Plus className="h-4 w-4 mr-1" />
+            Add Assignment
+          </Button>
+        </div>
+      </Tabs>
+
+      {/* Heat Stats */}
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Badge variant="outline" className="font-normal">
+          Heat {selectedHeat}
+        </Badge>
+        <span>{totalHeatDrivers} drivers total</span>
       </div>
 
       <div className="rounded-md border">
@@ -195,8 +247,12 @@ export function WorkAssignmentsTable({
                     <TableCell className="text-center">
                       {assignment.totalAssigned}
                     </TableCell>
-                    <TableCell className="text-center">{assignment.min}</TableCell>
-                    <TableCell className="text-center">{assignment.max}</TableCell>
+                    <TableCell className="text-center">
+                      {assignment.min}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {assignment.max}
+                    </TableCell>
                     <TableCell className="text-center">
                       {getStatusBadge(
                         assignment.totalAssigned,
@@ -219,7 +275,9 @@ export function WorkAssignmentsTable({
                             <span className="font-mono text-sm bg-muted px-2 py-0.5 rounded">
                               #{driver.carNumber}
                             </span>
-                            <span className="font-medium">{driver.driverName}</span>
+                            <span className="font-medium">
+                              {driver.driverName}
+                            </span>
                             <span className="text-muted-foreground">
                               {driver.carName}
                             </span>
@@ -229,9 +287,6 @@ export function WorkAssignmentsTable({
                             <span className="text-xs text-muted-foreground">
                               {getCategoryName(driver.carClass)}
                             </span>
-                            <Badge variant="secondary" className="text-xs ml-auto">
-                              Heat {driver.assignedHeat}
-                            </Badge>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -246,10 +301,10 @@ export function WorkAssignmentsTable({
       <AddAssignmentModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        drivers={drivers}
+        drivers={heatDrivers}
+        selectedHeat={selectedHeat}
         onAssign={handleAssignDriver}
       />
     </div>
   );
 }
-

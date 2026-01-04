@@ -37,7 +37,8 @@ import { workAssignmentsDetails, carClasses } from "@/data/heatsData";
 interface AddAssignmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  drivers: Driver[];
+  drivers: Driver[]; // Already filtered to selected heat
+  selectedHeat: number;
   onAssign: (driverId: string, assignment: WorkAssignmentId) => void;
 }
 
@@ -58,6 +59,7 @@ export function AddAssignmentModal({
   open,
   onOpenChange,
   drivers,
+  selectedHeat,
   onAssign,
 }: AddAssignmentModalProps) {
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
@@ -97,9 +99,13 @@ export function AddAssignmentModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
-          <DialogTitle>Assign Driver to Work Assignment</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            Assign Driver to Work Assignment
+            <Badge variant="outline">Heat {selectedHeat}</Badge>
+          </DialogTitle>
           <DialogDescription>
-            Search for a driver and select a work assignment to assign them to.
+            Search for a driver in Heat {selectedHeat} and select a work
+            assignment to assign them to.
           </DialogDescription>
         </DialogHeader>
 
@@ -128,7 +134,12 @@ export function AddAssignmentModal({
 
           {/* Driver Search */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Driver</label>
+            <label className="text-sm font-medium">
+              Driver{" "}
+              <span className="text-muted-foreground font-normal">
+                ({sortedDrivers.length} in Heat {selectedHeat})
+              </span>
+            </label>
             {selectedDriver ? (
               <div className="flex items-center justify-between p-3 border rounded-md bg-muted/30">
                 <div className="flex items-center gap-3">
@@ -143,7 +154,9 @@ export function AddAssignmentModal({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline">{getClassName(selectedDriver.carClass)}</Badge>
+                  <Badge variant="outline">
+                    {getClassName(selectedDriver.carClass)}
+                  </Badge>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -157,8 +170,8 @@ export function AddAssignmentModal({
               <Command className="border rounded-md">
                 <CommandInput placeholder="Search drivers by name, car, or number..." />
                 <CommandList>
-                  <CommandEmpty>No driver found.</CommandEmpty>
-                  <CommandGroup heading="Available Drivers">
+                  <CommandEmpty>No driver found in Heat {selectedHeat}.</CommandEmpty>
+                  <CommandGroup heading={`Heat ${selectedHeat} Drivers`}>
                     {sortedDrivers.map((driver) => (
                       <CommandItem
                         key={String(driver.id)}
@@ -232,4 +245,3 @@ export function AddAssignmentModal({
     </Dialog>
   );
 }
-
